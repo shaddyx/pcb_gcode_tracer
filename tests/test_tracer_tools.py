@@ -68,8 +68,26 @@ def test_is_bounding_line():
         [0, 0, 1, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1],
         [0, 0, 0, 0, 0, 0, 1, 0]
-    ]
-    )
+    ])
     assert tracer_tools.is_bounding_line(dots, 3, 2, 3, 6)
     assert not tracer_tools.is_bounding_line(dots, 3, 2, 3, 7)
     assert tracer_tools.is_bounding_line(dots, 2, 5, 5, 2)
+
+
+def test_fund_next_clockwise():
+    dots = np.array([
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 1, 0]
+    ])
+    assert tracer_tools.fund_next_clockwise(dots, 4, 1) == (5, 2)
+    assert tracer_tools.fund_next_clockwise(dots, 5, 2) == (4, 3)
+    assert tracer_tools.fund_next_clockwise(dots, 3, 4) == (3, 3)
+    assert tracer_tools.fund_next_clockwise(dots, 1, 1) is None
+

@@ -12,6 +12,11 @@ def get_dot_safe(im: np.array, x: int, y: int):
 
 
 @numba.jit(nopython=True)
+def check_black_dot_safe(im: np.array, x: int, y: int):
+    return check_dot_safe(im, x, y, 1)
+
+
+@numba.jit(nopython=True)
 def check_dot_safe(im: np.array, x: int, y: int, val: int):
     return get_dot_safe(im, x, y) == val
 
@@ -55,3 +60,24 @@ def convert_to_onebit(im: np.array):
         for x in range(w):
             out[y, x] = 0 if color_util.is_void(im[y, x]) else 1
     return out
+
+
+@numba.jit(nopython=True)
+def fund_next_clockwise(im: np.array, x: int, y: int):
+    if check_black_dot_safe(im, x, y - 1):
+        return x, y - 1
+    if check_black_dot_safe(im, x + 1, y - 1):
+        return x + 1, y - 1
+    if check_black_dot_safe(im, x + 1, y):
+        return x + 1, y
+    if check_black_dot_safe(im, x + 1, y + 1):
+        return x + 1, y + 1
+    if check_black_dot_safe(im, x, y + 1):
+        return x, y + 1
+    if check_black_dot_safe(im, x - 1, y + 1):
+        return x - 1, y + 1
+    if check_black_dot_safe(im, x - 1, y):
+        return x - 1, y
+    if check_black_dot_safe(im, x - 1, y - 1):
+        return x - 1, y - 1
+    return None
