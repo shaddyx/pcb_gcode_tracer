@@ -1,6 +1,7 @@
 import numba
 import numpy as np
 import color_util
+import tracer.tracer_gen
 from tracer import tracer_math
 
 
@@ -36,7 +37,7 @@ def is_bounding_dot(im: np.array, x: int, y: int):
 
 @numba.jit(nopython=True)
 def is_bounding_line(im: np.array, x, y, x1, y1):
-    for xx, yy in tracer_math.line_gen(x, y, x1, y1):
+    for xx, yy in tracer.tracer_gen.line_gen(x, y, x1, y1):
         if not is_bounding_dot(im, xx, yy):
             return False
     return True

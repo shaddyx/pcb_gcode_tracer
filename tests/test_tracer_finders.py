@@ -3,7 +3,7 @@ import numpy as np
 import tracer.tracer_finders
 
 
-def test_fund_next_clockwise():
+def test_find_next_clockwise():
     dots = np.array([
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 0, 0, 0],
@@ -15,10 +15,12 @@ def test_fund_next_clockwise():
         [0, 0, 0, 0, 0, 0, 0, 1],
         [0, 0, 0, 0, 0, 0, 1, 0]
     ])
-    assert tracer.tracer_finders.fund_next_clockwise(dots, 4, 1) == (5, 2)
-    assert tracer.tracer_finders.fund_next_clockwise(dots, 5, 2) == (4, 3)
-    assert tracer.tracer_finders.fund_next_clockwise(dots, 3, 4) == (3, 3)
-    assert tracer.tracer_finders.fund_next_clockwise(dots, 1, 1) is None
+    assert tracer.tracer_finders.find_next_clockwise(dots, 4, 1) == (5, 2)
+    assert tracer.tracer_finders.find_next_clockwise(dots, 5, 2) == (4, 3)
+    assert tracer.tracer_finders.find_next_clockwise(dots, 3, 4) == (3, 3)
+    assert tracer.tracer_finders.find_next_clockwise(dots, 1, 1) is None
+
+    assert tracer.tracer_finders.find_next_clockwise(dots, 2, 5, 3, 4) == (3, 5)
 
 
 def test_find_start():

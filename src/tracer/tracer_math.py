@@ -1,24 +1,13 @@
+import math
+
 import numba
 
 
 @numba.jit(nopython=True)
-def line_gen(x: int, y: int, x1: int, y1: int):
-    dx = abs(x1 - x)
-    dy = abs(y1 - y)
-    sx = -1 if x > x1 else 1
-    sy = -1 if y > y1 else 1
-    err = dx - dy
+def line_len_tuples(dot_a, dot_b):
+    return line_len(dot_a[0], dot_a[1], dot_b[0], dot_b[1])
 
-    while True:
-        yield x, y
 
-        if x == x1 and y == y1:
-            break
-        e2 = 2 * err
-        if e2 > -dy:
-            err -= dy
-            x += sx
-        if e2 < dx:
-            err += dx
-            y += sy
-
+@numba.jit(nopython=True)
+def line_len(x: int, y: int, x1: int, y1: int):
+    return math.sqrt(pow(x - x1, 2) + pow(y - y1, 2))
