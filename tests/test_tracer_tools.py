@@ -33,15 +33,6 @@ def test_is_bounding_dot():
     assert not tracer_tools.is_bounding_dot(dots, 1, 1)
 
 
-def test_find_start():
-    arr = np.zeros((3, 5), dtype=np.int32)
-    assert tracer_tools.find_start(arr) is None
-    arr[2, 4] = 1
-    assert tracer_tools.find_start(arr) == (4, 2)
-    arr[1, 2] = 1
-    assert tracer_tools.find_start(arr) == (2, 1)
-
-
 def test_convert_to_onebit():
     arr = np.zeros((3, 5, 4), dtype=np.int32)
     res = tracer_tools.convert_to_onebit(arr)
@@ -72,22 +63,3 @@ def test_is_bounding_line():
     assert tracer_tools.is_bounding_line(dots, 3, 2, 3, 6)
     assert not tracer_tools.is_bounding_line(dots, 3, 2, 3, 7)
     assert tracer_tools.is_bounding_line(dots, 2, 5, 5, 2)
-
-
-def test_fund_next_clockwise():
-    dots = np.array([
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0],
-        [0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 1, 0]
-    ])
-    assert tracer_tools.fund_next_clockwise(dots, 4, 1) == (5, 2)
-    assert tracer_tools.fund_next_clockwise(dots, 5, 2) == (4, 3)
-    assert tracer_tools.fund_next_clockwise(dots, 3, 4) == (3, 3)
-    assert tracer_tools.fund_next_clockwise(dots, 1, 1) is None
-

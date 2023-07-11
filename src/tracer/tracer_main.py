@@ -1,6 +1,7 @@
 import numba
 import numpy as np
 
+import tracer.tracer_finders
 from tracer import tracer_tools
 
 
@@ -8,7 +9,7 @@ from tracer import tracer_tools
 def trace(im: np.array):
     h, w = im.shape
     while True:
-        start = tracer_tools.find_start(im)
+        start = tracer.tracer_finders.find_start(im)
         if start is None:
             return
         startX, startY = start

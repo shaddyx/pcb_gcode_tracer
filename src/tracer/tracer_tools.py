@@ -43,16 +43,6 @@ def is_bounding_line(im: np.array, x, y, x1, y1):
 
 
 @numba.jit(nopython=True)
-def find_start(im: np.array):
-    h, w = im.shape
-    for y in range(h):
-        for x in range(w):
-            if im[y, x] == 1:
-                return x, y
-    return None
-
-
-@numba.jit(nopython=True)
 def convert_to_onebit(im: np.array):
     h, w, bts = im.shape
     out = np.zeros((h, w), dtype=np.int8)
@@ -62,22 +52,3 @@ def convert_to_onebit(im: np.array):
     return out
 
 
-@numba.jit(nopython=True)
-def fund_next_clockwise(im: np.array, x: int, y: int):
-    if check_black_dot_safe(im, x, y - 1):
-        return x, y - 1
-    if check_black_dot_safe(im, x + 1, y - 1):
-        return x + 1, y - 1
-    if check_black_dot_safe(im, x + 1, y):
-        return x + 1, y
-    if check_black_dot_safe(im, x + 1, y + 1):
-        return x + 1, y + 1
-    if check_black_dot_safe(im, x, y + 1):
-        return x, y + 1
-    if check_black_dot_safe(im, x - 1, y + 1):
-        return x - 1, y + 1
-    if check_black_dot_safe(im, x - 1, y):
-        return x - 1, y
-    if check_black_dot_safe(im, x - 1, y - 1):
-        return x - 1, y - 1
-    return None
