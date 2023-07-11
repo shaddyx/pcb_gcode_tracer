@@ -1,0 +1,9 @@
+*.png
+*.gif
+*.bmp
+venv
+.idea
+.pytest_cache
+*.pyc
+__pycache__
+*.scad
