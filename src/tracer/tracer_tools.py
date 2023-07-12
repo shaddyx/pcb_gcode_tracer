@@ -1,8 +1,8 @@
 import numba
 import numpy as np
+
 import color_util
 import tracer.tracer_gen
-from tracer import tracer_math
 
 
 @numba.jit(nopython=True)
@@ -33,7 +33,6 @@ def is_bounding_dot(im: np.array, x: int, y: int):
             or check_dot_safe(im, x + 1, y, 0)
             or check_dot_safe(im, x, y + 1, 0)
     )
-
 
 @numba.jit(nopython=True)
 def is_bounding_line(im: np.array, x, y, x1, y1):

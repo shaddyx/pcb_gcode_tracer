@@ -1,11 +1,11 @@
 import numba
 import numpy as np
 
-from tracer import tracer_tools
+from tracer import tracer_tools, tracer_gen
 
 
 @numba.jit(nopython=True)
-def find_next_clockwise(im: np.array, x: int, y: int, ox: int | None = None, oy: int | None = None):
+def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int | None = None, oy: int | None = None):
     _clockwise = [
         (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)
     ]
@@ -15,7 +15,7 @@ def find_next_clockwise(im: np.array, x: int, y: int, ox: int | None = None, oy:
             continue
         if tracer_tools.is_bounding_dot(im, xx, yy):
             return xx, yy
-    return None
+    return -1, -1
 
 
 @numba.jit(nopython=True)
@@ -28,9 +28,41 @@ def find_start(im: np.array):
     return None
 
 
+@numba.jit(nopython=True)
+def find_max_line(im: np.array, x: int, y: int, x1: int, y1: int):
+    px, py = x, y
+    for dx, dy in tracer_gen.line_gen(x, y, x1, y1):
+        if not tracer_tools.is_bounding_dot(im, dx, dy):
+            return x, y, px, py
+        px, py = dx, dy
+    return x, y, x1, y1
+
+
+@numba.jit(nopython=True)
+def _check_prev(x: int, y: int, nx: int, ny: int):
+    first = True
+    for ppx, ppy in tracer_gen.line_gen(nx, ny, x, y):
+        if first:
+            first = False
+            continue
+        return int(ppx), int(ppy)
+    return nx, ny
+
+
+@numba.jit(nopython=True)
 def find_next_line(im: np.array, x: int, y: int):
-    prev = None
+    px, py = x, y
+    xx, yy = x, y
     while True:
-        next = find_next_clockwise(im, x, y)
-        if next is None:
-            pass
+        nd = find_next_dot_clockwise(im, xx, yy, px, py)
+        if nd == (-1, -1):
+            return x, y, xx, yy
+        ndx, ndy = nd[0], nd[1]
+        cx, cy = _check_prev(x, y, ndx, ndy)
+        if cx != xx or cy != yy:
+            return x, y, xx, yy
+        if tracer_tools.is_bounding_line(im, x, y, ndx, ndy):
+            px, py = xx, yy
+            xx, yy = nd
+        else:
+            return x, y, xx, yy
