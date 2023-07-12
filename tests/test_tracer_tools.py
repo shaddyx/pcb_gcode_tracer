@@ -1,15 +1,15 @@
 import numpy as np
 
-from tracer import tracer_tools
+from tracer import tracer_tools, tracer_constants
 
 
 def test_get_dot_safe():
     arr = np.zeros((5, 3), dtype=np.int32)
     assert tracer_tools.get_dot_safe(arr, 1, 1) == 0
     assert tracer_tools.get_dot_safe(arr, 0, 0) == 0
-    assert tracer_tools.get_dot_safe(arr, -1, 0) is None
+    assert tracer_tools.get_dot_safe(arr, -1, 0) == tracer_constants.NO_VALUE_DOT
     assert tracer_tools.get_dot_safe(arr, 2, 4) == 0
-    assert tracer_tools.get_dot_safe(arr, 3, 0) is None
+    assert tracer_tools.get_dot_safe(arr, 3, 0) == tracer_constants.NO_VALUE_DOT
 
 
 def test_is_bounding_dot():

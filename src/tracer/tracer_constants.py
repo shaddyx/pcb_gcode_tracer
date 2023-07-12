@@ -1,0 +1,2 @@
+XY_NOT_FOUND = (-1, -1)
+NO_VALUE_DOT = -1

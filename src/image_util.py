@@ -4,9 +4,10 @@ from PIL import Image
 
 import color_util
 import config
+from tracer.tracer_jit import tjit
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def find_min_max(im: np.array):
     h, w, bts = im.shape
     mx = w
@@ -23,7 +24,7 @@ def find_min_max(im: np.array):
     return mx, my, max_x, max_y
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def convert_to_bw(img: Image) -> Image:
     h, w, bts = img.shape
     output_im = img.copy()
@@ -34,6 +35,18 @@ def convert_to_bw(img: Image) -> Image:
                 output_im[y, x] = (1, 0, 0, 255)
             else:
                 output_im[y, x] = (0, 0, 0, 0)
+    return output_im
+
+@tjit(nopython=True)
+def convert_to_one_bit(im: np.array) -> np.array:
+    h, w, bts = im.shape
+    output_im = np.zeros((h, w))
+    for x in range(w):
+        for y in range(h):
+            if color_util.is_black(im[y, x]):
+                output_im[y, x] = 1
+            else:
+                output_im[y, x] = 0
     return output_im
 
 

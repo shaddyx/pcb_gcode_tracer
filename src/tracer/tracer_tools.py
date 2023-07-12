@@ -3,26 +3,28 @@ import numpy as np
 
 import color_util
 import tracer.tracer_gen
+from tracer import tracer_constants
+from tracer.tracer_jit import tjit
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def get_dot_safe(im: np.array, x: int, y: int):
     if x < 0 or y < 0 or x >= im.shape[1] or y >= im.shape[0]:
-        return None
+        return tracer_constants.NO_VALUE_DOT
     return im[y, x]
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def check_black_dot_safe(im: np.array, x: int, y: int):
     return check_dot_safe(im, x, y, 1)
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def check_dot_safe(im: np.array, x: int, y: int, val: int):
     return get_dot_safe(im, x, y) == val
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def is_bounding_dot(im: np.array, x: int, y: int):
     h, w = im.shape
 
@@ -34,7 +36,7 @@ def is_bounding_dot(im: np.array, x: int, y: int):
             or check_dot_safe(im, x, y + 1, 0)
     )
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def is_bounding_line(im: np.array, x, y, x1, y1):
     for xx, yy in tracer.tracer_gen.line_gen(x, y, x1, y1):
         if not is_bounding_dot(im, xx, yy):
@@ -42,7 +44,7 @@ def is_bounding_line(im: np.array, x, y, x1, y1):
     return True
 
 
-@numba.jit(nopython=True)
+@tjit(nopython=True)
 def convert_to_onebit(im: np.array):
     h, w, bts = im.shape
     out = np.zeros((h, w), dtype=np.int8)

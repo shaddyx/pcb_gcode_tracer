@@ -1,18 +1,20 @@
 import numba
 import numpy as np
 
-import tracer.tracer_finders
-from tracer import tracer_tools
+from tracer import tracer_tools, tracer_finders, tracer_constants, tracer_gen
+from tracer.tracer_jit import tjit
 
 
-# @numba.jit(nopython=True)
+@tjit(nopython=True)
 def trace(im: np.array):
-    h, w = im.shape
     while True:
-        start = tracer.tracer_finders.find_start(im)
-        if start is None:
+        start = tracer_finders.find_start(im)
+        if start == tracer_constants.XY_NOT_FOUND:
             return
-        startX, startY = start
-        print(startX, startY)
-        im[startY, startX] = 0
-        yield start
+        start_x, start_y = start
+        if start_x is None or start_y is None:
+            print()
+        line = tracer_finders.find_next_line(im, start_x, start_y)
+        for kx, ky in tracer_gen.line_gen(line[0], line[1], line[2], line[3]):
+            im[ky, kx] = 0
+        yield line

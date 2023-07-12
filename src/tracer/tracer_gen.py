@@ -1,7 +1,9 @@
 import numba
 
+from tracer.tracer_jit import tjit
 
-@numba.jit(nopython=True)
+
+@tjit(nopython=True)
 def line_gen(x: int, y: int, x1: int, y1: int):
     dx = abs(x1 - x)
     dy = abs(y1 - y)
