@@ -20,7 +20,7 @@ def test_trace():
     assert list(tracer_main.trace(dots)) == [(3, 2, 4, 2), (3, 3, 4, 3), (3, 4, 3, 6), (2, 5, 2, 6)]
 
 
-def test_trace():
+def test_trace_new():
     dots = np.array([
         [1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 1],

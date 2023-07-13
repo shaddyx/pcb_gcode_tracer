@@ -16,7 +16,7 @@ def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int | None = None,
             continue
         if tracer_tools.is_bounding_dot(im, xx, yy):
             return xx, yy
-    return -1, -1
+    return tracer_constants.XY_NOT_FOUND
 
 
 @tjit(nopython=True)

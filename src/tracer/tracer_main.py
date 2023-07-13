@@ -11,10 +11,14 @@ def trace(im: np.array):
         start = tracer_finders.find_start(im)
         if start == tracer_constants.XY_NOT_FOUND:
             return
-        start_x, start_y = start
-        if start_x is None or start_y is None:
-            print()
-        line = tracer_finders.find_next_line(im, start_x, start_y)
-        for kx, ky in tracer_gen.line_gen(line[0], line[1], line[2], line[3]):
-            im[ky, kx] = 0
-        yield line
+
+        while True:
+            start_x, start_y = start
+            line = tracer_finders.find_next_line(im, start_x, start_y)
+            for kx, ky in tracer_gen.line_gen(line[0], line[1], line[2], line[3]):
+                im[ky, kx] = 0
+            yield line
+            
+            start = tracer_finders.find_next_dot_clockwise(im, line[2], line[3])
+            if start == tracer_constants.XY_NOT_FOUND:
+                break
