@@ -52,6 +52,7 @@ def convert_to_one_bit(im: np.array) -> np.array:
 def resample(img: np.array, multiplication_ratio: float) -> Image:
     h, w = img.shape
     oh, ow = int(h / multiplication_ratio), int(w / multiplication_ratio)
+    print(f"resampling {w}*{h} to {ow}*{oh}")
     output_im = np.zeros((oh, ow))
 
     for x in range(ow):

@@ -8,7 +8,7 @@ class GcodeGen:
         self.prev = tracer_constants.XY_NOT_FOUND
         self.dpi = 96
         self.dpmm = self.dpi / 25.4
-        self.scale = 1
+        self.scale = 2
         self.is_up = True
         self.distance_threshold = 0.1
 
