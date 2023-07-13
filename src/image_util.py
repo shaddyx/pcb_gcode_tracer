@@ -51,12 +51,12 @@ def convert_to_one_bit(im: np.array) -> np.array:
 @tjit(nopython=True)
 def resample(img: np.array, multiplication_ratio: float) -> Image:
     h, w = img.shape
-    oh, ow = int(h / multiplication_ratio) + 1, int(w / multiplication_ratio) + 1
+    oh, ow = int(h / multiplication_ratio), int(w / multiplication_ratio)
     output_im = np.zeros((oh, ow))
 
     for x in range(ow):
         for y in range(oh):
-            pix = img[y * multiplication_ratio, x * multiplication_ratio]
+            pix = img[int(y * multiplication_ratio), int(x * multiplication_ratio)]
             if pix:
                 output_im[y, x] = 1
             else:

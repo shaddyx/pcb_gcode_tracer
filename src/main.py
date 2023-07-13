@@ -38,7 +38,7 @@ with Image.open(config.TMP_IMG) as im:
     im1 = npx[my:max_y, mx:max_x]
     logging.info("Converting to bw")
     bw = image_util.convert_to_bw(im1)
-    traced_data = tracer_main.trace(image_util.resample(image_util.convert_to_one_bit(bw), 5))
+    traced_data = tracer_main.trace(image_util.resample(image_util.convert_to_one_bit(bw), 1))
     save_traced(traced_data)
     im1 = PIL.Image.fromarray(bw)
     im1.save(config.TMP_BW_IMG)

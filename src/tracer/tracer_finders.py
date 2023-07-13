@@ -1,14 +1,19 @@
 import numba
 import numpy as np
 
-from tracer import tracer_tools, tracer_gen, tracer_constants
+from tracer import tracer_tools, tracer_gen, tracer_constants, tracer_math
 from tracer.tracer_jit import tjit
 
 
 @tjit(nopython=True)
-def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int | None = None, oy: int | None = None):
+def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int = tracer_constants.NO_VALUE_DOT, oy: int = tracer_constants.NO_VALUE_DOT):
+    if ox != tracer_constants.NO_VALUE_DOT and (x != ox or y != oy):
+        xx, yy = tracer_math.get_opposite_dot(ox, oy, x, y)
+        if tracer_tools.is_bounding_dot(im, xx, yy):
+            return xx, yy
+
     _clockwise = [
-        (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)
+        (0, -1), (1, 0), (0, 1), (-1, 0), (1, -1), (1, 1), (-1, 1), (-1, -1)
     ]
     for k in _clockwise:
         xx, yy = x + k[0], y + k[1]

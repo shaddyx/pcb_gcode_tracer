@@ -19,8 +19,10 @@ def test_find_next_clockwise():
     assert tracer_finders.find_next_dot_clockwise(dots, 5, 2) == (4, 3)
     assert tracer_finders.find_next_dot_clockwise(dots, 3, 4) == (3, 3)
     assert tracer_finders.find_next_dot_clockwise(dots, 1, 1) == tracer_constants.XY_NOT_FOUND
-
     assert tracer_finders.find_next_dot_clockwise(dots, 2, 5, 3, 4) == (3, 5)
+    # detect opposite
+    assert tracer_finders.find_next_dot_clockwise(dots, 3, 3, 3, 4) == (3, 2)
+    assert tracer_finders.find_next_dot_clockwise(dots, 3, 3, 3, 2) == (3, 4)
 
 
 def test_find_start():
@@ -63,6 +65,6 @@ def test_find_next_line():
         [0, 0, 0, 0, 0, 0, 1, 0]
     ])
     assert tracer_finders.find_next_line(dots, 3, 6) == (3, 6, 3, 2)
-    assert tracer_finders.find_next_line(dots, 3, 2) == (3, 2, 4, 1)
+    assert tracer_finders.find_next_line(dots, 3, 2) == (3, 2, 3, 6)
     dots[1, 4] = 0
     assert tracer_finders.find_next_line(dots, 3, 2) == (3, 2, 5, 2)
