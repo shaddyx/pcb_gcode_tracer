@@ -8,11 +8,12 @@ class GcodeGen:
         self.prev = tracer_constants.XY_NOT_FOUND
         self.dpi = 96
         self.dpmm = self.dpi / 25.4
+        self.scale = 1
         self.is_up = True
         self.distance_threshold = 0.1
 
     def convert_to_mm(self, value):
-        return round(value * 1000 / self.dpmm) / 1000
+        return round(value / self.scale * 1000 / self.dpmm) / 1000
 
     def down_if_required(self):
         if self.is_up:
@@ -25,7 +26,7 @@ class GcodeGen:
                 and not tracer_math.neibours_dots(self.prev[0], self.prev[1], x, y)
         ):
             self.is_up = True
-            yield from self.up()
+            yield self.up()
 
     def gen(self, lines):
         self.prev = tracer_constants.XY_NOT_FOUND

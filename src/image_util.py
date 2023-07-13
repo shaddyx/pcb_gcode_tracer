@@ -1,9 +1,7 @@
-import numba
 import numpy as np
 from PIL import Image
 
 import color_util
-import config
 from tracer.tracer_jit import tjit
 
 
@@ -50,16 +48,17 @@ def convert_to_one_bit(im: np.array) -> np.array:
     return output_im
 
 
-def resample(img: Image, multiplication_ration: float) -> Image:
-    output_im = Image.new('RGBA', (
-        int(img.width / multiplication_ration) + 1, int(img.height / multiplication_ration) + 1))
+@tjit(nopython=True)
+def resample(img: np.array, multiplication_ratio: float) -> Image:
+    h, w = img.shape
+    oh, ow = int(h / multiplication_ratio) + 1, int(w / multiplication_ratio) + 1
+    output_im = np.zeros((oh, ow))
 
-    for x in range(output_im.width):
-        for y in range(output_im.height):
-            source_coords = (x * config.MULTIPLICATION_RATIO, y * config.MULTIPLICATION_RATIO)
-            pix = img.getpixel(source_coords)
-            if color_util.is_black(pix):
-                output_im.putpixel((x, y), (1, 0, 0, 255))
+    for x in range(ow):
+        for y in range(oh):
+            pix = img[y * multiplication_ratio, x * multiplication_ratio]
+            if pix:
+                output_im[y, x] = 1
             else:
-                output_im.putpixel((x, y), (0, 0, 0, 0))
+                output_im[y, x] = 0
     return output_im
