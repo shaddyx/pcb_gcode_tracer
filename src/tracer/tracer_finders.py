@@ -1,6 +1,3 @@
-import random
-
-import numba
 import numpy as np
 
 from tracer import tracer_tools, tracer_gen, tracer_constants, tracer_math
@@ -48,9 +45,11 @@ def find_start(im: np.array):
     h, w = im.shape
     for y in range(h):
         for x in range(w):
-            if im[y, x] == 1:
+            if tracer_tools.is_bounding_dot(im, x, y):
                 return x, y
     return tracer_constants.XY_NOT_FOUND
+
+
 
 
 @tjit(nopython=True)
