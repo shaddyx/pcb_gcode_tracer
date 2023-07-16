@@ -5,6 +5,7 @@ from tracer import tracer_tools, tracer_finders, tracer_constants, tracer_gen
 from tracer.tracer_jit import tjit
 
 
+
 @tjit(nopython=True)
 def trace(im: np.array):
     while True:

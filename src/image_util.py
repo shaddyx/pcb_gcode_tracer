@@ -63,3 +63,6 @@ def resample(img: np.array, multiplication_ratio: float) -> Image:
             else:
                 output_im[y, x] = 0
     return output_im
+
+def flip(img: np.array):
+    return np.flipud(img)

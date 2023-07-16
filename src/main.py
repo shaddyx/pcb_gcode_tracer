@@ -42,7 +42,7 @@ with Image.open(config.TMP_IMG) as im:
     im1 = PIL.Image.fromarray(bw)
     im1.save(config.TMP_BW_IMG)
 
-    traced_data = tracer_main.trace(image_util.resample(image_util.convert_to_one_bit(bw), 1))
+    traced_data = tracer_main.trace(image_util.resample(image_util.flip(image_util.convert_to_one_bit(bw)), 1))
     save_traced(traced_data)
 
     #npx = np.array(im1)
