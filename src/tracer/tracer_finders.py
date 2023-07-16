@@ -1,35 +1,20 @@
 import numpy as np
 
 from tracer import tracer_tools, tracer_gen, tracer_constants, tracer_math
+from tracer.finders import dot_finder
 from tracer.tracer_jit import tjit
 
 
 @tjit(nopython=True)
-def _get_rotation_array(seed):
-    seed = seed / 3
-    if seed == 0:
-        return [
-            (0, -1), (1, 0), (0, 1), (-1, 0), (1, -1), (1, 1), (-1, 1), (-1, -1)
-        ]
-    elif seed == 1:
-        return [
-            (1, 0), (0, -1), (-1, 0), (0, 1), (1, -1), (1, 1), (-1, 1), (-1, -1)
-        ]
-    else:
-        return [
-            (-1, 0), (0, 1), (1, 0), (0, -1), (1, -1), (1, 1), (-1, 1), (-1, -1)
-        ]
-
-
-@tjit(nopython=True)
-def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int = tracer_constants.NO_VALUE_DOT, oy: int = tracer_constants.NO_VALUE_DOT,
-                            rand: bool = False):
+def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int = tracer_constants.NO_VALUE_DOT, oy: int = tracer_constants.NO_VALUE_DOT):
     if ox != tracer_constants.NO_VALUE_DOT and (x != ox or y != oy):
         xx, yy = tracer_math.get_opposite_dot(ox, oy, x, y)
         if tracer_tools.is_bounding_dot(im, xx, yy):
             return xx, yy
 
-    _clockwise = _get_rotation_array(x + y if rand else 0)
+    _clockwise = [
+        (0, -1), (1, 0), (0, 1), (-1, 0), (1, -1), (1, 1), (-1, 1), (-1, -1)
+    ]
 
     for k in _clockwise:
         xx, yy = x + k[0], y + k[1]
@@ -41,15 +26,8 @@ def find_next_dot_clockwise(im: np.array, x: int, y: int, ox: int = tracer_const
 
 
 @tjit(nopython=True)
-def find_start(im: np.array):
-    h, w = im.shape
-    for y in range(h):
-        for x in range(w):
-            if tracer_tools.is_bounding_dot(im, x, y):
-                return x, y
-    return tracer_constants.XY_NOT_FOUND
-
-
+def find_start(im: np.array, x: int = tracer_constants.NO_VALUE_DOT, y: int = tracer_constants.NO_VALUE_DOT):
+    return dot_finder.find_start(im, x, y)
 
 
 @tjit(nopython=True)
@@ -78,7 +56,7 @@ def find_next_line(im: np.array, x: int, y: int):
     px, py = x, y
     xx, yy = x, y
     while True:
-        nd = find_next_dot_clockwise(im, xx, yy, px, py, False)
+        nd = find_next_dot_clockwise(im, xx, yy, px, py)
         if nd == tracer_constants.XY_NOT_FOUND:
             return x, y, xx, yy
         ndx, ndy = nd[0], nd[1]
